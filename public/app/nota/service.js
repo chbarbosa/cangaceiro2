@@ -23,14 +23,11 @@ export const notasService = {
     sumItems(code) {
         // utilizando partialize!
         const filterItems = partialize(filterItemsByCode, code);
-        // realizando a composição 
-        return this .listAll()
-            .then(notas => sumItemsValue(
-                filterItems(
-                    getItemsFromNotas(notas)
-                )
-            )
-        );
+        // função compose ainda não foi implementada 
+        const sumItems = compose( sumItemsValue, filterItems, getItemsFromNotas);
+        return this
+            .listAll()
+            .then(sumItems);
         //return this.listAll().then(sumItems(code));
     }
 };
