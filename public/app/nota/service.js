@@ -1,5 +1,5 @@
 import { handleStatus } from '../utils/promise-helpers.js' ;
-import { partialize, compose } from '../utils/operators.js' ;
+import { partialize, pipe } from '../utils/operators.js' ;
 
 const API = 'http://localhost:3000/notas' ;
 
@@ -9,29 +9,19 @@ const sumItemsValue = items => items.reduce((total, item) => total + item.valor,
 
 export const notasService = {
     listAll() {
-    return fetch(API) 
-    // lida com o status da requisição 
-    .then(handleStatus)
-    .catch(err => { 
-        // o serviço agora é o responsável em logar o erro 
-        console.log(err); 
-        // retorna uma mensagem amigável 
-        return Promise.reject( 'Não foi possível obter as notas fiscais' ); 
-        }); 
+        return fetch(API)
+        .then(handleStatus)
+        .catch(err => {
+            console.log(err);
+            return Promise.reject('Não foi possível obter as notas fiscais');
+        });
     },
-    // novo método
     sumItems(code) {
-        // utilizando partialize!
-        const filterItems = partialize(filterItemsByCode, code);
-        // usando pipe e alterando a ordem dos parâmetros
         const sumItems = pipe(
             getItemsFromNotas,
-            partialize(filterItemsByCode, '2143' ),
+            partialize(filterItemsByCode, '2143'), 
             sumItemsValue, 
-            );
-        return this
-            .listAll()
-            .then(sumItems);
-        //return this.listAll().then(sumItems(code));
+        );
+        return this.listAll().then(sumItems);
     }
 };
