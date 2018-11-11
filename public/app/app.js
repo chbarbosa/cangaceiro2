@@ -10,7 +10,12 @@ const operations = pipe( partialize(takeUntil, 3 ), partialize(debounceTime, 500
 const action = operations(() =>
     retry( 3 , 3000 , () =>
     timeoutPromise( 200 , service.sumItems( '2143' )))
-    .then(log)
+    .then(soma => {
+        console .log(soma);
+        // um interessado 
+        alert(soma); 
+        // outro interessado 
+    })
     .catch(log) );
 
 document .querySelector( '#myButton' ) .onclick = action;
